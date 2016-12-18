@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html id="main_wrap">
+    <head>
+        <meta charset="utf-8" />
+        <title v-cloak>酒窝直播间</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no"/>
+        <meta name="x5-orientation" content="portrait" />
+        <meta name="screen-orientation" content="portrait">
+        <!--#if expr="$QUERY_STRING = /device=ios/" -->
+        <!--#include file="/ssi_include/new/globalvalue_ios.htm"-->
+        <!--#else-->
+        <!--#include file="/ssi_include/new/globalvalue_adr.htm"-->
+        <!--#endif -->
+        <link rel="stylesheet" href="<!--#echo var='WAPMISCPATH' -->room/css/base.css?version=<!--#echo var='SUFFIXCSS' -->">
+        <link rel="stylesheet" href="<!--#echo var='WAPMISCPATH' -->room/css/live.css?version=<!--#echo var='SUFFIXCSS' -->">
+        <link rel="stylesheet" type="text/css" href="http://img.jiuwo.kanimg.com/wap/1.0.0/css/video-js.min.css?version=<!--#echo var='SUFFIXJS' -->">
+        <script type="text/javascript" src="<!--#echo var='DOMAIN' -->/web/source/v3/common/videojs/video.min.js"></script>
+        <script type="text/javascript" src="<!--#echo var='WAPTEST' -->dist/jiuwo/1.0.0/source/new/lib/vue.pack.js?version=<!--#echo var='SUFFIXJS' -->"></script>
+<!--         <script type="text/javascript" src="http://jiuwo.xunlei.com/web/source/v3/common/login.js"></script> -->
+        <!--         <script type="text/javascript" src="./tool-nativeSchema.js"></script> -->
+        <!--#include file="/ssi_include/script.htm"-->
+        <style type="text/css">
+        [v-cloak]{
+        display: none;
+        }
+        #myplayer
+        {
+
+/*        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        overflow: hidden;  */
+        }
+.video-area .video.pcvideo{
+    background-color:black;
+}
+          .video-area .video.pcvideo video{
+           /* width:auto;*/
+            height: auto;
+
+
+/*        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);*/
+         /*   height: auto; */
+/*    height: auto; 
+    object-fit: cover*/
+
+} 
+        </style>
+    </head>
+    <body ontouchstart=""  >
+       <!--  <div id="main_wrap" style="height:100%"> -->
+            
+            <div class="wrap" :style="{overflowX: platform == 33 ? 'hidden' : ''} ">
+                <!-- 直播即将开始 -->
+                <div class="room-wait" v-cloak v-show="roomState == 0">
+                    <!-- 封面图 -->
+                    <div class="poster"><img :src="playerImage" alt=""></div>
+                    <!-- 播放 -->
+                    <a href="javascript:;" class="cover-play" @click="startPlay"></a>
+                    
+                </div>
+                <!-- 直播中 -->
+                <div class="room-live" v-cloak v-show="roomState == 1">
+                    <!-- 视频区域 -->
+                    <div class="video-area">
+                        <!-- 视频 -->
+                        <div :class="{ 'video': true,'pcvideo': !platform}" v-el:video style="width: 1px;height: 1px;">
+                            <!-- 放置视频 -->
+                            <!-- <video id="myplayer" class="vjs-default-skin"  autoplay='false' x-webkit-airplay="allow" webkit-playsinline > -->
+                            <!--                     <source src="http://assets7.ign.com/videos/zencoder/2016/06/15/960/7080c56a76e2b74ec8ecfe4c224441d4-1500000-1466028542-w.mp4" type='video/mp4'> -->
+                            <!--         <source src="https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8" type='application/x-mpegURL'> -->
+                            <!--     </video> -->
+                            <!-- <player-area v-ref:myplayer></player-area > -->
+                        </div>
+                        <!-- 封面图 -->
+                        <div class="poster" style="display: none"><img :src="playerImage" alt=""></div>
+                        <a href="javascript:;" class="cover-play" v-show="isPause" @click="startPlay"></a>
+                    </div>
+                    <!-- 主播 -->
+                    <div class="player">
+                        <div class="player-featrue">
+                            <span class="avatar"><img :src="playerAvatar" alt=""></span>
+                            <!--   <span class="u-icon"><img src="http://placehold.it/100x100" alt="主播等级"></span> -->
+                        </div>
+                        <div class="player-detail">
+                            <p class="name">{{playerName}}</p>
+                            <p class="desc">{{roomUserNum}}人</p>
+                        </div>
+                    </div>
+                    <!-- 互动区域 -->
+                    <div class="interact-area">
+                        <div class="chat-box" v-el:chatbox>
+                            <div class="chat-list" v-el:chatlist>
+                                <!--                         <div class="chat-item">
+                                    <p class="txt-notice">系统通知  欢迎来到酒窝直播祝您们今天玩的开心开心</p>
+                                </div> -->
+                                <div v-for="msg in msgList" class="chat-item" v-cloak>
+                                    <a v-if="msg.cmd != 'onnoticemsg'" href="javascript:;" class="chat-user">
+                                        <span class="u-icon-wp">
+                                            <i class="u-icon" v-for="medal in msg.medalList"><img :src="medal" alt=""></i>
+                                        </span>
+                                        <span v-if=" msg.cmd != 'onlastchat'" class="name">{{msg.user.nickname}}</span>
+                                    </a>
+                                    <span  v-if="msg.cmd != 'onnoticemsg' && msg.content && msg.type != 'gift'" v-html="msg.content | expression"></span>
+                                    <span  v-if="msg.cmd != 'onnoticemsg' && msg.type == 'gift'" v-html="'送了' + msg.gift.img + '×' + msg.gift.num"></span>
+                                    <span  v-if="msg.cmd != 'onnoticemsg' && msg.cmd == 'oninroom'" v-html="'进入了房间'"></span>
+                                    <p v-if=" msg.cmd == 'onnoticemsg'" class="txt-notice">{{msg.notice_msg}}</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="operate-wp">
+                            <div class="operate-list">
+                                <a href="javascript:;" @click="jumpToApp" class="btn-chat">聊天</a>
+                                <a href="javascript:;" @click="jumpToApp" class="btn-share">分享</a>
+                                <a href="javascript:;" @click="jumpToApp" class="btn-gift">送礼物</a>
+                            </div>
+                            <a href="javascript:;" @click="jumpToApp" class="btn-download-main"><i class="logo"></i>立即下载</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 直播结束 -->
+                <div class="room-end" v-cloak v-show="roomState == 2">
+                    <!-- 封面图 -->
+                    <div class="poster"><img :src="playerImage" alt=""></div>
+                    <div class="cover-info">
+                        <p class="tit">直播结束</p>
+                        <p class="desc"><a href="#recommendList">去看看其他热门直播&gt;</a></p>
+                    </div>
+                </div>
+                <!-- 主播名片 -->
+                <div class="card-anchor" v-cloak>
+                    <div class="anchor-featrue"><img :src="playerAvatar" alt=""></div>
+                    <div class="anchor-detail">
+                        <p class="name" >{{playerName}}</p>
+                    </div>
+                    <div class="anchor-handle">
+                        <a href="javascript:;"  class="btn-focus" @click="jumpToApp">关注ta</a>
+                        <!--              <a href="#" class="btn-focus btn-focused">已关注</a> -->
+                    </div>
+                </div>
+                <!-- 主播推荐列表 -->
+                <div class="panel-live" id="recommendList">
+                    <div class="panel-hd">
+                        <h3 class="tit"><i class="ico-radio"></i>热门直播</h3>
+                    </div>
+                    <div class="panel-bd">
+                        <div class="live-list">
+                            <ul v-cloak>
+                                <li  v-for="player in playerList">
+                                    <!-- 封面 -->
+                                    <div class="live-featrue"><img :src="player.player_image" alt="{{player.nickname}}"></div>
+                                    <!-- 直播标识 -->
+                                    <i v-if="player.is_live" :class="{ 'ico-living': player.is_live && !player.platform,'ico-living-phone': player.is_live && player.platform}" v-html=" player.platform ? '手机直播':'直播中'"></i>
+                                    <!-- 主播信息 -->
+                                    <div class="live-detail">
+                                        <p class="name">{{player.nickname}}</p>
+                                        <p class="desc">{{player.room_user_nums}}人</p>
+                                    </div>
+                                    <!-- 点击跳转房间页 -->
+                                    <a href="http://jiuwo.xunlei.com/wap/room/play.html?roomid={{player.roomid}}" class="live-lnk"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 吸顶 -->
+            <div class="sticky-downapp">
+                <div class="downapp-featrue"><img src="<!--#echo var='WAPMISCPATH' -->room/img/logo2.png" alt="酒窝直播"></div>
+                <div class="downapp-detail">
+                    <h1 class="tit">酒窝直播</h1>
+                    <p class="desc">美女互动直播平台</p>
+                </div>
+                <div class="downapp-handle">
+                    <span class="btn-down">立即下载</span>
+                </div>
+                <a href="javascript:;" @click="jumpToApp" class="downapp-lnk"></a>
+            </div>
+            <!-- 下载app提示浮层 -->
+            <div class="pop-downtip" v-cloak v-show="isShare" @click="hideShare">
+                <div class="downtip-cont">
+                    <p>下载APP，请点击右上角按钮</p>
+                    <p>选择在浏览器中打开</p>
+                </div>
+            </div>
+       <!--  </div> -->
+
+        <script type="text/javascript" src="<!--#echo var='WAPTEST' -->dist/jiuwo/1.0.0/source/new/room/room.js?version=<!--#echo var='SUFFIXJS' -->"></script>
+        <!--公用尾部-->
+        <!--#include file="/ssi_include/scriptfooter_wap_pure.htm"-->
+        <!--公用尾部 结束-->
+        <!--    <script>document.body.addEventListener('touchstart', function () {});</script> -->
+        <!--     <script type="text/javascript">
+        if (location.href.indexOf("?dev") != -1 || seajs.data.debug == true) {
+        seajs.use(["#echo var='TEST'dist/seajs-wrap.js", "#echo var='WAPTEST'dist/jiuwo/1.0.0/source/new/lib/vue.pack.js?#echo var='SUFFIXJS'"], function() {
+        seajs.use("#echo var='WAPTEST'dist/jiuwo/1.0.0/source/new/room/room.js?#echo var='SUFFIXJS'"); //入口文件
+        });
+        }
+        //For production
+        else {
+        seajs.use(["#echo var='CREATE'wap/dist/jiuwo/1.0.0/source/new/lib/vue.pack.js?#echo var='SUFFIXJS'"],function(){
+        seajs.use("#echo var='CREATE'wap/dist/jiuwo/1.0.0/source/room/room.js?#echo var='SUFFIXJS'"); //发布版本
+        });
+        
+        }
+        </script> -->
+    </body>
+    <script type="text/javascript">
+   // var model = _model;
+  //   var TYPE = xlQuickLogin.TYPE;
+  //   var Util = xlQuickLogin.Util;
+  // //  LoginModel.login_callbacks = login_callbacks;
+  // //  LoginModel.loginout_callbacks = logout_callbacks;
+  //   xlQuickLogin.init({
+  //       loginID: '158',
+  //       registerID: 'act',
+  //       UI_THEME: 'popup',
+  //       useCdn: 1,
+  //       THIRD_LOGIN_TARGET_PARENT: true,
+  //       // 登录成功后回调函数，当 SET_ROOT_DOMAIN == true 时该项可用
+  //       LOGIN_SUCCESS_FUNC: function() {
+  //           refreshVipUserInfo(login_callbacks);
+  //       },
+  //       // 注册成功后回调函数，当 SET_ROOT_DOMAIN == true 时该项可用
+  //       REGISTER_SUCCESS_FUNC: function() {
+  //           location.reload();
+  //       },
+  //       // 关闭按钮回调函数，只适用弹窗主题
+  //       POPUP_CLOSE_FUNC: function() {},
+  //       //登出后的回调
+  //       LOGOUT_FUNC: function() {
+  //           // logout_callbacks && logout_callbacks.fire();
+
+  //       }
+  //   });
+    </script>
+</html>
