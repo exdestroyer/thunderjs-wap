@@ -46,7 +46,7 @@
     "dll": "webpack --config webpack.dll.config.js",
     "build": "webpack -p",
     "webpack-dev-server": "cross-env NODE_ENV=development PORT=8080 webpack-dev-server --content-base  --hot --inline --history-api-fallback --config webpack.dev.config.js",
-    "dev": "cross-env NODE_ENV=development webpack --config webpack.dev.config.js && npm run webpack-dev-server"
+    "dev": "cross-env NODE_ENV=development npm run dll && node server.js"
   },
   "author": "Helvin@Xunlei",
   "license": "ISC"
