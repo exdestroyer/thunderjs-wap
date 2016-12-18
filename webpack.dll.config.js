@@ -13,7 +13,7 @@ module.exports = {
     //publicPath: 'http://localhost:8080/',
     path: path.resolve(__dirname, 'dist/1.0.0/lib'),
     filename: '[name].js',
-    library: '[name]'               // 必填项，将此dll包暴露到window上，给app.js调用
+    library: '[name]'               // 必填项，将此dll包暴露到window上
   },
   plugins: [
     new webpack.DllPlugin({
