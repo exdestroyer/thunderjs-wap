@@ -18,8 +18,8 @@
 </body>
 
 
-<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-<script type="text/javascript" src="<%= htmlWebpackPlugin.options.hostname + 'dist/1.0.0/' + chunk + '.js'%>"></script>
+<% for (var js in htmlWebpackPlugin.files.js) { %>
+<script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[js] %>"></script>
 <% } %>
 <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 </html>

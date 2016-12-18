@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-  //const commonsPlugin = new webpack.optimize.CommonsChunkPlugin('vue.pack', 'lib/vue.pack.js');
 const path = require('path');
 const srcDir = path.resolve(process.cwd(), 'source');
 const fs = require('fs');
@@ -8,6 +7,7 @@ const glob = require('glob');
 const argv = require('yargs').argv;
 const ignoreFiles = new webpack.IgnorePlugin(/video.js$/);
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const WebpackMd5Hash = require('webpack-md5-hash');
 var files = argv.file;
 var htmlName = 'index';
 if (files) {
@@ -22,7 +22,7 @@ var getEntry = function() {
   var matchs = [];
 
   for (var name of glob.sync(srcDir + '/!(lib|common|assets|components|vuex)**/*.js')) {
-    if (files && 　files.length) {
+    if (files && files.length) {
 
       for (var file of files) {
         var reg = new RegExp(".*\/(\\w+\/" + file.replace(/\.js/, '') + ")\.js$");
@@ -30,12 +30,9 @@ var getEntry = function() {
         matchs = name.match(reg);
 
         if (matchs) {
-          //  console.log(matchs[1].match(/\w+\/\w+$/))
-          //  console.log(matchs[1].replace(/^\w+\/(\\w+\/\\w+)$/,"$1"))
           entry[matchs[1].match(/\w+\/\w+$/)[0]] = name;
         }
       }
-      // console.log(Object.keys(entry).length === files.length)
       if (Object.keys(entry).length === files.length) {
         return entry;
       }
@@ -43,7 +40,6 @@ var getEntry = function() {
 
       matchs = name.match(/\/(\w+\/\w+)\.js$/);
       if (matchs) {
-
         entry[matchs[1]] = name;
       }
     }
@@ -53,8 +49,6 @@ var getEntry = function() {
 
 module.exports = {
   plugins: [
-    // commonsPlugin,
-    // ignoreFiles,
     new webpack.ProvidePlugin({
       TD: 'vue',
       Vuex: 'vuex'
@@ -67,9 +61,10 @@ module.exports = {
       title: 'ThunderJS示例',
       template: 'source/assets/index.html',
       filename: path.resolve(__dirname, htmlName + '/' + htmlName + '.html'),
-      inject: true
+      inject: false,
+      hostname: "http://localhost:8080/"
     }),
-    new ExtractTextPlugin("[name]_[chunkhash].css"),
+    new ExtractTextPlugin("[name]_[contenthash:16].css"),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
@@ -80,16 +75,16 @@ module.exports = {
         ascii_only: true,
         beautify: false
       }
-    })
+    }),
+    new WebpackMd5Hash()
   ],
   entry: Object.assign(getEntry(), {
     //'vue.pack': ['vue', 'vue-resource']
   }),
   output: {
-    //path: path.resolve(__dirname, '../../webroot_misc/wap/dist/jiuwo/1.0.0/source/new'),
-    publicPath: 'http://localhost:8080/',
+    publicPath: 'http://localhost:8080/dist/1.0.0',
     path: path.resolve(__dirname, 'dist/1.0.0'),
-    filename: '[name]_[chunkhash].js'
+    filename: '[name]_[chunkhash:16].js'
   },
   module: {
     loaders: [{
@@ -111,9 +106,7 @@ module.exports = {
       loaders: ['unicode-loader'],
     }, ],
   },
-  devtool: "#source-map",
   externals: {
-    '_': 'window._',
     '$': 'window.jQuery',
   },
   babel: {
@@ -123,9 +116,6 @@ module.exports = {
   node: {
     fs: 'empty',
     tls: 'empty'
-  },
-  devServer: {
-   // contentBase: './index'
   },
   resolve: {
     alias: {

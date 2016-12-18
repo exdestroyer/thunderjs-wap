@@ -113,9 +113,6 @@ module.exports = {
     fs: 'empty',
     tls: 'empty'
   },
-  devServer: {
-   // contentBase: './index'
-  },
   resolve: {
     alias: {
       'vue': '../lib/vue.common.js'
