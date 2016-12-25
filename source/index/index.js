@@ -23,7 +23,7 @@ const tm = new TD({
 
 	},
 	mounted: function() {
-		console.log('mounted1')
+		console.log('mounted')
 	},
 	methods: {
 
