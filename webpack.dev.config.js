@@ -81,7 +81,7 @@ module.exports = {
   //  publicPath: 'http://localhost:8080/',
     path: __dirname + '/dist/1.0.0', // path.resolve(__dirname, 'dist/1.0.0'),
     filename: '[name].js',
-    publicPath: 'http://localhost:8080/dist/1.0.0'
+    publicPath: 'http://localhost:8080/1.0.0'
   },
   module: {
     loaders: [{

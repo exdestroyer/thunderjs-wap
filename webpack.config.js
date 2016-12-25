@@ -60,9 +60,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'ThunderJS示例',
       template: 'source/assets/index.html',
-      filename: path.resolve(__dirname, htmlName + '/' + htmlName + '.html'),
+      filename: path.resolve(__dirname, 'dist/' + htmlName + '/' + htmlName + '.html'),
       inject: false,
-      hostname: "http://localhost:8080/"
+      hostname: "http://localhost:3000/"
     }),
     new ExtractTextPlugin("[name]_[contenthash:16].css"),
     new webpack.optimize.UglifyJsPlugin({
@@ -82,7 +82,7 @@ module.exports = {
     //'vue.pack': ['vue', 'vue-resource']
   }),
   output: {
-    publicPath: 'http://localhost:8080/dist/1.0.0',
+    publicPath: 'http://localhost:3000/1.0.0',
     path: path.resolve(__dirname, 'dist/1.0.0'),
     filename: '[name]_[chunkhash:16].js'
   },
