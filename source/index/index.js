@@ -1,7 +1,7 @@
 // require('../lib/login.js')
 // import VueResource from "vue-resource";
 //import TD from 'thunderjs'
-import '../styles/css/index.css'
+import '../styles/scss/index.scss'
 import Util from '../lib/util.js';
 import store from '../vuex/store.js'
 import Counter from '../components/Counter.vue'

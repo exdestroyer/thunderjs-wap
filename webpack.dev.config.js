@@ -10,6 +10,10 @@ const ignoreFiles = new webpack.IgnorePlugin(/video.js$/);
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 var files = argv.file;
 var htmlName = 'index';
+var config = {
+    "index/index":"./source/v3/index.js",
+
+};
 if (files) {
   files = files.split(',');
   htmlName = files[0].split('/').reverse()[0].replace(/\.js/, '');
@@ -41,11 +45,8 @@ var getEntry = function() {
       }
     } else {
 
-      matchs = name.match(/\/(\w+\/\w+)\.js$/);
-      if (matchs) {
+      entry = {}
 
-        entry[matchs[1]] = name;
-      }
     }
   }
   return entry;

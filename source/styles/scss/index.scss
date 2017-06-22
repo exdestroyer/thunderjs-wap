@@ -1,0 +1,17 @@
+body{
+	text-decoration: none;
+}
+
+
+.content {
+     background: #000 url(../../img/index/bg.jpg) no-repeat center top; 
+    background-size: 320px auto;
+    padding-bottom: 30px;
+    opacity: 1;
+    color:red;
+}
+.dd{
+	display: flex;
+	transform:translate(-50%);
+
+}
