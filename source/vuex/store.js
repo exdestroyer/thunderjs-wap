@@ -5,6 +5,8 @@
 // import middlewares from './middlewares'
 
 //const debug = process.env.NODE_ENV !== 'production'
+// console.log(Vuex)
+
 TD.use(Vuex)
 //TD.config.debug = debug
 

@@ -51,7 +51,7 @@
   "scripts": {
     "start": "npm run build",
     "dll": "webpack --config webpack.dll.config.js",
-    "build": "set NODE_ENV=production && webpack --file index.js && node server.js",
+    "build": "set NODE_ENV=production && webpack --env.file index/index.js && node server.js",
     "webpack-dev-server": "cross-env NODE_ENV=development PORT=8080 webpack-dev-server --content-base  --hot --inline --history-api-fallback --config webpack.dev.config.js",
     "dev": "cross-env NODE_ENV=development npm run dll && node dev-server.js"
   },

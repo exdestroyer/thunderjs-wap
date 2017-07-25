@@ -24,7 +24,7 @@ var config = {
 
 module.exports = function(env) {
   process.noDeprecation = true;
-  var files = env.file;
+  var files = env && env.file || null;
   if (files) {
     files = files.split(',');
     htmlName = files[0].split('/').reverse()[0].replace(/\.js/, '');
@@ -72,7 +72,7 @@ module.exports = function(env) {
       }),
       new webpack.ProvidePlugin({
         TD: 'vue',
-        Vuex: 'vuex'
+        Vuex: ['vuex/dist/vuex.esm.js', 'default']
       }),
       new webpack.DllReferencePlugin({
         context: __dirname, // 同那个dll配置的路径保持一致
@@ -89,8 +89,8 @@ module.exports = function(env) {
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
-          drop_debugger: true,
-          drop_console: true
+        //  drop_debugger: true,
+         // drop_console: true
         },
         output: {
           ascii_only: true,
@@ -168,7 +168,7 @@ module.exports = function(env) {
       }],
     },
     externals: {
-      '$': 'window.jQuery',
+      $: 'window.jQuery',
     },
 
     node: {

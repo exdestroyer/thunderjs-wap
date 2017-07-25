@@ -21,21 +21,22 @@ module.exports = {
       path: './config/manifest.json',    // 必填项，存放manifest的路径
       name: '[name]'                     // 必填项，manifest的name
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        drop_debugger: true,
-        drop_console: true
-      },
-      output: {
-        ascii_only: true,
-        beautify: false
-      }
-    })
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false,
+    //     drop_debugger: true,
+    //     drop_console: true
+    //   },
+    //   output: {
+    //     ascii_only: true,
+    //     beautify: false
+    //   }
+    // })
   ],
   resolve: {
     alias: {
-      'vue': path.resolve(__dirname, 'source/lib/vue.common.js')
+      'vue': 'vue/dist/vue.esm.js',
+      'vuex': 'vuex/dist/vuex.esm.js'
     }
   }
 };

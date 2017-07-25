@@ -1,8 +1,17 @@
 {
   "name": "thunder",
   "content": {
-    "./node_modules/vuex/dist/vuex.esm.js": {
+    "./node_modules/vue/dist/vue.esm.js": {
       "id": 0,
+      "meta": {
+        "harmonyModule": true
+      },
+      "exports": [
+        "default"
+      ]
+    },
+    "./node_modules/vuex/dist/vuex.esm.js": {
+      "id": 1,
       "meta": {
         "harmonyModule": true
       },
@@ -14,10 +23,6 @@
         "mapActions",
         "default"
       ]
-    },
-    "./source/lib/vue.common.js": {
-      "id": 1,
-      "meta": {}
     },
     "./node_modules/process/browser.js": {
       "id": 2,
