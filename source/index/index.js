@@ -6,7 +6,7 @@ import Util from '../lib/util.js';
 import store from '../vuex/store.js'
 import Counter from '../components/Counter.vue'
 // import '../lib/login.js';
-// import '../lib/share.js'hhhffff
+// import '../lib/share.js'hhhffff5555
 
 // Vue.use(VueResource);
 TD.use(Vuex)
