@@ -10,7 +10,7 @@ import Counter from '../components/Counter.vue'
 // const Vuex = require('vuex').default
 
 // import '../lib/login.js';
-// import '../lib/share.js'ddddd
+// import '../lib/share.js'ddddd3333
 
 // Vue.use(VueResource);
 // console.log(TD)
